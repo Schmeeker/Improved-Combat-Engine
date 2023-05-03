@@ -1,0 +1,33 @@
+{
+  "source": "player2.char",
+  "name": "Jerome",
+  "HP": 15,
+  "maxHP": 15,
+  "strength": 2,
+  "agility": 2,
+  "fortitude": 1,
+  "wit": 2,
+  "luck": 0,
+  "primary": {
+    "bonus": 10,
+    "difficulty": 3,
+    "finesse": false,
+    "type": null,
+    "source": "testWeapon2.wepn",
+    "name": "Bug Zapper",
+    "weight": 0,
+    "attributes": null
+  },
+  "secondary": null,
+  "armour": {
+    "protection": 10,
+    "threshold": -1,
+    "health": 5,
+    "source": null,
+    "name": "Dummy Padding",
+    "weight": 0,
+    "attributes": null
+  },
+  "actions": null,
+  "tags": {}
+}
