@@ -1,0 +1,30 @@
+{
+  "source": "player3.char",
+  "name": "Freddy",
+  "HP": 17,
+  "maxHP": 17,
+  "strength": 3,
+  "agility": 1,
+  "fortitude": 2,
+  "wit": 0,
+  "luck": 1,
+  "primary": {
+    "bonus": 7,
+    "difficulty": 0,
+    "finesse": false,
+    "type": null,
+    "source": "testWeapon3.wepn",
+    "name": "Mace",
+    "weight": 3
+  },
+  "secondary": null,
+  "armour": {
+    "protection": 0,
+    "threshold": 0,
+    "health": -1,
+    "source": null,
+    "name": "No Armour",
+    "weight": 0
+  },
+  "resist": {}
+}

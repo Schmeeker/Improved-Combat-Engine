@@ -1,0 +1,15 @@
+{
+  "source": "player4.char",
+  "name": "Void",
+  "HP": -1,
+  "maxHP": -1,
+  "strength": -1,
+  "agility": -1,
+  "fortitude": -1,
+  "wit": -1,
+  "luck": -1,
+  "primary": null,
+  "secondary": null,
+  "armour": null,
+  "resist": {}
+}
