@@ -1,0 +1,7 @@
+{
+  "name": "Bug Zapper",
+  "bonus": 10,
+  "difficulty": 3,
+  "source": "testWeapon2.wepn",
+  "finesse": false
+}

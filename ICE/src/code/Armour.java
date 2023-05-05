@@ -31,7 +31,7 @@ public class Armour extends Item {
 		this.threshold = 0;
 		this.health = -1;
 		
-		this.setName("No Armour");
+//		this.setName("No Armour");
 	}
 	
 	public int absorb(int damage) {
@@ -52,7 +52,7 @@ public class Armour extends Item {
 		
 		ScriptManager.push(this, "armour");
 		ScriptManager.push(absorbed, "damage");
-		this.getAttributes().function("onAbsorb");
+		this.event("onAbsorb");
 		
 		return (int) absorbed;
 		

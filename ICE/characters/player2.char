@@ -1,0 +1,30 @@
+{
+  "source": "player2.char",
+  "name": "Jerome",
+  "HP": 15,
+  "maxHP": 15,
+  "strength": 2,
+  "agility": 2,
+  "fortitude": 1,
+  "wit": 2,
+  "luck": 0,
+  "primary": {
+    "source": "testWeapon2.wepn",
+    "contents": null,
+    "valid": false,
+    "events": null,
+    "vars": null,
+    "actions": null
+  },
+  "secondary": null,
+  "armour": {
+    "source": null,
+    "contents": null,
+    "valid": false,
+    "events": null,
+    "vars": null,
+    "actions": null
+  },
+  "traits": null,
+  "tags": {}
+}

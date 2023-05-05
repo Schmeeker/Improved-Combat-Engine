@@ -41,7 +41,7 @@ public class Weapon extends Item {
 		this.type = null;
 		this.finesse = false;
 		
-		this.setName("Their Fists");
+//		this.setName("Their Fists");
 	}
 	
 }

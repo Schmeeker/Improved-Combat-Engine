@@ -36,7 +36,7 @@ public class FuncScript extends Script {
 			return false;
 	}
 	
-	public LuaValue[] function(String key) {
+	public LuaValue[] event(String key) {
 		String function = this.functions.get(key);
 		
 		if(function == null)

@@ -1,8 +1,10 @@
 package code;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Scanner;
 
 public class Character {
 	
@@ -19,14 +21,14 @@ public class Character {
 	private int wit;
 	private int luck;
 	
-	private Weapon primary;
+	private Item primary;
 	private Item secondary;
 	
-	private Armour armour;
+	private Item armour;
 	
-	private FuncScript actions;
+	private Script traits;
 	
-	private HashMap<String, FuncScript> tags = new HashMap<String, FuncScript>();
+	private HashMap<String, Script> tags = new HashMap<String, Script>();
 	
 	public int getHP() {
 		return HP;
@@ -87,7 +89,7 @@ public class Character {
 		this.source = path;
 	}
 	public File getSourceFile() {
-		return new File(this.source);
+		return new File("characters\\" + this.source);
 	}
 	public void setSourceFile(File source) {
 		this.source = source.getPath();
@@ -98,18 +100,18 @@ public class Character {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Weapon getPrimary() {
+	public Item getPrimary() {
 		if(this.primary != null)
 			return this.primary;
 		else {
-			return new Weapon(null);
+			return new Item(null);
 		}
 			
 	}
-	public Weapon loadPrimary() {
+	public Item loadPrimary() {
 		return this.primary;
 	}
-	public void equipPrimary(Weapon primary) {
+	public void equipPrimary(Item primary) {
 		this.primary = primary;
 	}
 	public Item getSecondary() {
@@ -125,94 +127,81 @@ public class Character {
 	public void equipSecondary(Item secondary) {
 		this.secondary = secondary;
 	}
-	public Armour getArmour() {
+	public Item getArmour() {
 		if(this.armour != null)
 			return this.armour;
 		else {
-			return new Armour(null);
+			return new Item(null);
 		}
 	}
-	public Armour loadArmour() {
+	public Item loadArmour() {
 		return armour;
 	}
-	public void equipArmour(Armour armour) {
+	public void equipArmour(Item armour) {
 		this.armour = armour;
 	}
 	
 	public Character(String path) {
+		
 		this.source = path;
 		
-		this.name = "Unnamed Character";
-		
-		this.HP = 0;
-		this.maxHP = 0;
-		
-		this.strength = 0;
-		this.agility = 0;
-		this.fortitude = 0;
-		this.wit = 0;
-		this.luck = 0;
-		
-	}
-	
-	public void load() {
-		try {
+		if(!load()) {
+			this.source = null;
 			
-			Character model = Creator.loadFromPath(this.source);
+			this.name = "Unnamed Character";
 			
-//			this.source = model.getSourcePath();
+			this.HP = 0;
+			this.maxHP = 0;
 			
-			this.name = model.getName();
-			
-			this.HP = model.getHP();
-			this.maxHP = model.getMaxHP();
-			
-			this.strength = model.getStrength();
-			this.agility = model.getAgility();
-			this.fortitude = model.getFortitude();
-			this.wit = model.getWit();
-			this.luck = model.getLuck();
-			
-			
-			if(model.loadPrimary() != null) {
-				try {
-					this.primary = (Weapon) Creator.loadItem(model.getPrimary());
-				} catch (IOException e) {
-					UI.fileNotFound(model.getPrimary().getSourcePath());
-					this.primary = model.loadPrimary();
-				}
-			} else
-				this.primary = model.loadPrimary();
-			
-			if(model.loadSecondary() != null) {
-				try {
-					this.secondary = Creator.loadItem(model.getSecondary());
-				} catch (IOException e) {
-					UI.fileNotFound(model.getSecondary().getSourcePath());
-					this.secondary = model.loadSecondary();
-				}
-			} else
-				this.secondary = model.loadSecondary();
-			
-			if(model.loadArmour() != null) {
-				try {
-					this.armour = (Armour) Creator.loadItem(model.getArmour());
-				} catch (IOException e) {
-					UI.fileNotFound(model.getArmour().getSourcePath());
-					this.armour = model.loadArmour();
-				}
-			} else
-				this.armour = model.loadArmour();
-			
-			// Check that nothing is null!
-			
-		} catch (IOException e1) {
-			UI.fileNotFound(this.getSourcePath());
+			this.strength = 0;
+			this.agility = 0;
+			this.fortitude = 0;
+			this.wit = 0;
+			this.luck = 0;
 		}
 		
 	}
 	
-	public void save() throws IOException {
+	public boolean load() {
+		Character model = Creator.loadFromPath(this.source);
+		
+		if(model == null)
+			return false;
+		
+//			this.source = model.getSourcePath();
+		
+		this.name = model.getName();
+		
+		this.HP = model.getHP();
+		this.maxHP = model.getMaxHP();
+		
+		this.strength = model.getStrength();
+		this.agility = model.getAgility();
+		this.fortitude = model.getFortitude();
+		this.wit = model.getWit();
+		this.luck = model.getLuck();
+		
+		
+		if(model.loadPrimary() != null) {
+			this.primary = model.getPrimary();
+		} else
+			this.primary = model.loadPrimary();
+		
+		if(model.loadSecondary() != null) {
+			this.secondary = model.getSecondary();
+		} else
+			this.secondary = model.loadSecondary();
+		
+		if(model.loadArmour() != null) {
+			this.armour = model.getArmour();
+		} else
+			this.armour = model.loadArmour();
+		
+		return true;
+		
+	}
+	
+	public void save() {
 		Creator.save(this);
 	}
 	
@@ -220,109 +209,144 @@ public class Character {
 		Creator.saveAs(this, path);
 	}
 	
-	public int rollAttack(boolean primary) {
+	public Object attack(Character target, boolean primary) {
+		Item used = (primary) ? this.primary : this.secondary;
 		
-		Weapon used;
+		if(!used.hasEvent("attack")) {
+			UI.message(String.format("%s is not a weapon?", used.getName()));
+			return null;
+		}
 		
-		if(this.secondary instanceof Weapon && !primary)
-			used = (Weapon) this.secondary;
-		else
-			used = this.getPrimary();
-		
-		UI.attacking(this, used);
-		
-		ScriptManager.push(used, "weapon");
 		ScriptManager.push(this, "user");
-		used.getAttributes().function("onSwing");
-		
-		int damage = 0;
-		
-		if(this.wit >= used.getDifficulty())
-			damage += used.getBonus();
-		else
-			damage -= used.getBonus();
-		
-		if(Util.random(0, 20) + this.luck >= 15) {
-			UI.crit();
-			damage += used.getBonus();
-			
-			if(used.isFinesse())
-				damage += this.agility;
-			else
-				damage += this.strength;
-			
-		}
-		
-		if(used.isFinesse())
-			damage += this.agility;
-		else
-			damage += this.strength;
-		
-		if(damage < 0)
-			damage = 0;
-		
-		return damage;
+		ScriptManager.push(target, "target");
+		return used.event("attack");
 	}
 	
-	public int rollDefend(int damage, String type) {
-		//TODO add damage typing and vulnerability/resistance
-		// TODO make this good.
+	public Object defend(Character attacker, Item used) {
 		
-		int hurt = damage;
-		
-		//Dodge roll
-		int roll = Util.random(0, 5) + this.agility + (this.luck) / 2;
-		double percent = (roll / 20);
-		
-		if(roll + this.luck >= damage - damage * percent) {
-			if(roll < damage - damage * percent)
-				UI.lucky(this);
-			UI.dodge(this);
-			hurt = 0;
-		} else {
-			//resistance
-			if(this.armour == null)
-				hurt -= this.fortitude;
-			else {
-				hurt -= this.armour.absorb(damage);
-				if(this.armour.getHealth() == 0) {
-					UI.armourBreak(this);
-					this.armour = null;
-				}
-			}
+		if(!used.hasEvent("defend")) {
+			UI.message(String.format("%s cannot defend?", used.getName()));
+			return null;
 		}
 		
-		if(hurt < 0)
-			hurt = 0;
-		
-		this.HP -= hurt;
-		
-		if(this.HP < 0)
-			this.HP = 0;
-		
-		return hurt;
+		ScriptManager.push(this, "user");
+		ScriptManager.push(attacker, "attacker");
+		return used.event("defend");
 	}
 	
-	public FuncScript getActions() {
-		return actions;
+	public Object event(String key) {
+		if(!traits.hasEvent(key)) {
+			UI.message(String.format("%s cannot %s!", this.name, key));
+			return null;
+		}
+		
+		ScriptManager.push(this, "user");
+		return traits.event(key);
 	}
-	public void setActions(FuncScript actions) {
-		this.actions = actions;
+	
+//	public int rollAttack(boolean primary) {
+//		
+//		Weapon used;
+//		
+//		if(this.secondary instanceof Weapon && !primary)
+//			used = (Weapon) this.secondary;
+//		else
+//			used = this.getPrimary();
+//		
+//		UI.attacking(this, used);
+//		
+//		ScriptManager.push(used, "weapon");
+//		ScriptManager.push(this, "user");
+//		used.event("onAttack");
+//		
+//		int damage = 0;
+//		
+//		if(this.wit >= used.getDifficulty())
+//			damage += used.getBonus();
+//		else
+//			damage -= used.getBonus();
+//		
+//		if(Util.random(0, 20) + this.luck >= 15) {
+//			UI.crit();
+//			damage += used.getBonus();
+//			
+//			if(used.isFinesse())
+//				damage += this.agility;
+//			else
+//				damage += this.strength;
+//			
+//		}
+//		
+//		if(used.isFinesse())
+//			damage += this.agility;
+//		else
+//			damage += this.strength;
+//		
+//		if(damage < 0)
+//			damage = 0;
+//		
+//		return damage;
+//	}
+	
+//	public int rollDefend(int damage, String type) {
+//		//TODO add damage typing and vulnerability/resistance
+//		// TODO make this good.
+//		
+//		int hurt = damage;
+//		
+//		//Dodge roll
+//		int roll = Util.random(0, 5) + this.agility + (this.luck) / 2;
+//		double percent = (roll / 20);
+//		
+//		if(roll + this.luck >= damage - damage * percent) {
+//			if(roll < damage - damage * percent)
+//				UI.lucky(this);
+//			UI.dodge(this);
+//			hurt = 0;
+//		} else {
+//			//resistance
+//			if(this.armour == null)
+//				hurt -= this.fortitude;
+//			else {
+//				hurt -= this.armour.absorb(damage);
+//				if(this.armour.getHealth() == 0) {
+//					UI.armourBreak(this);
+//					this.armour = null;
+//				}
+//			}
+//		}
+//		
+//		if(hurt < 0)
+//			hurt = 0;
+//		
+//		this.HP -= hurt;
+//		
+//		if(this.HP < 0)
+//			this.HP = 0;
+//		
+//		return hurt;
+//	}
+	
+	public Script getTraits() {
+		return traits;
 	}
-	public HashMap<String, FuncScript> getTags() {
+	public void setTraits(Script traits) {
+		this.traits = traits;
+	}
+	public HashMap<String, Script> getTags() {
 		return tags;
 	}
-	public void setTags(HashMap<String, FuncScript> tags) {
+	public void setTags(HashMap<String, Script> tags) {
 		this.tags = tags;
 	}
 	
 	public void act(String key) {
 		if(key != null) {
-			this.actions.function(key);
+			this.traits.event(key);
 		}
 	}
 	
-	public void addTag(FuncScript tag, String key) {
+	public void addTag(Script tag, String key) {
 		this.tags.put(key, tag);
 	}
 	public void removeTag(String key) {
@@ -331,31 +355,18 @@ public class Character {
 	public boolean hasTag(String key) {
 		return (this.tags.get(key) != null);
 	}
-	public FuncScript getTag(String key) {
+	public Script getTag(String key) {
 		return this.tags.get(key);
 	}
-	public void tagFunction(String key, String function) {
+	public void tagEvent(String key, String event) {
 		if(this.hasTag(key))
-			this.getTag(key).function(function);
+			this.getTag(key).event(event);
 	}
 	
-	public void runTagFunctions(String function) {
+	public void runTagEvent(String event) {
 		for(String tag: this.tags.keySet()) {
-			tagFunction(tag, function);
+			tagEvent(tag, event);
 		}
-	}
-	
-	private int calculateWeight() {
-		int result = 0;
-		
-		if(this.primary != null)
-			result += this.primary.getWeight();
-		if(this.secondary != null)
-			result += this.primary.getWeight();
-		if(this.armour != null)
-			result += this.primary.getWeight();
-		
-		return result;
 	}
 	
 }

@@ -38,9 +38,9 @@ public class UI {
 			message(String.format("%s Is Attacking With %s...", user.getName(), "Their Bare Hands"));
 	}
 	
-	public static void damage(Character user, int amount, String damageSource) {
+	public static void damage(Character target, int amount, String damageSource) {
 		if(damageSource != null)
-			message(new String(user.getName() + " Took " + amount + " Damage From " + damageSource + "!"));
+			message(new String(target.getName() + " Took " + amount + " Damage From " + damageSource + "!"));
 	}
 	
 	public static void sourcelessDamage(Character user, int amount) {
@@ -70,12 +70,41 @@ public class UI {
 			endMessage(String.format("%s Missed!", attacker.getName()));
 	}
 	
-	public static void flavour(Character spotlight, String text) {
+	public static void me(Character spotlight, String text) {
 		message(String.format("%s is %s!", spotlight.getName(), text));
 	}
 	
 	public static void speak(Character speaker, String words) {
 		message(String.format("[%s] \"%s\"", speaker.getName(), words));
+	}
+	
+	public static void number(String text, int number) {
+		message(String.format(text, number));
+	}
+	
+	public static void vars(Script spotlight) {
+		String result = ">\t" + spotlight.getSource() + "\n";
+		for(String var: spotlight.getVars().keySet()) {
+			result += String.format("\t%s: %s%n", var, spotlight.getVar(var));
+		}
+		
+		System.out.println(result);
+	}
+	
+	public static void scriptInfo(Script spotlight) {
+		String result = ">INFO:\t" + spotlight.getSource() + "\n";
+		
+		result += "Vars(" + spotlight.getVars().keySet().size() + "):\n";
+		for(String var: spotlight.getVars().keySet()) {
+			result += String.format("\t%s: %s%n", var, spotlight.getVar(var));
+		}
+		
+		result += "Events(" + spotlight.getEvents().keySet().size() + "):\n";
+		for(String event: spotlight.getEvents().keySet()) {
+			result += String.format("\t%s: %.30s%n", event, spotlight.getEvents().get(event));
+		}
+		
+		System.out.println(result);
 	}
 	
 	public static void brief(Character spotlight) {
