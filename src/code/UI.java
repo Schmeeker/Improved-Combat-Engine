@@ -31,7 +31,7 @@ public class UI {
 		System.out.println();
 	}
 	
-	public static void attacking(Character user, Weapon used) {
+	public static void attacking(Character user, Item used) {
 		if(used != null)
 			message(String.format("%s Is Attacking With %s...", user.getName(), used.getName()));
 		else

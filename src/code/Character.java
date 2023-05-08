@@ -1,7 +1,6 @@
 package code;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -219,7 +218,7 @@ public class Character {
 		
 		ScriptManager.push(this, "user");
 		ScriptManager.push(target, "target");
-		return used.event("attack");
+		return used.event("attack", this, target);
 	}
 	
 	public Object defend(Character attacker, Item used) {
@@ -230,20 +229,66 @@ public class Character {
 		}
 		
 		ScriptManager.push(this, "user");
-		ScriptManager.push(attacker, "attacker");
-		return used.event("defend");
+//		ScriptManager.push(attacker, "attacker");
+		return used.event("defend", this, attacker);
 	}
 	
-	public Object event(String key) {
+	public Object traitEvent(String key) {
+		
 		if(!traits.hasEvent(key)) {
-			UI.message(String.format("%s cannot %s!", this.name, key));
+//			UI.message(String.format("%s cannot %s!", this.name, key));
 			return null;
 		}
 		
 		ScriptManager.push(this, "user");
-		return traits.event(key);
+		return traits.eventObj(key);
 	}
 	
+	
+	public Script getTraits() {
+		return traits;
+	}
+	public void setTraits(Script traits) {
+		this.traits = traits;
+	}
+	public HashMap<String, Script> getTags() {
+		return tags;
+	}
+	public void setTags(HashMap<String, Script> tags) {
+		this.tags = tags;
+	}
+	
+	public void act(String key) {
+		if(key != null) {
+			this.traits.action(key);
+		}
+	}
+	
+	public void addTag(Script tag, String key) {
+		this.tags.put(key, tag);
+	}
+	public void removeTag(String key) {
+		this.tags.remove(key);
+	}
+	public boolean hasTag(String key) {
+		return (this.tags.get(key) != null);
+	}
+	public Script getTag(String key) {
+		return this.tags.get(key);
+	}
+	public void tagEvent(String key, String event) {
+		if(this.hasTag(key))
+			this.getTag(key).event(event);
+	}
+	
+	public void runTagEvent(String event) {
+		for(String tag: this.tags.keySet()) {
+			tagEvent(tag, event);
+		}
+	}
+	
+}
+
 //	public int rollAttack(boolean primary) {
 //		
 //		Weapon used;
@@ -326,47 +371,3 @@ public class Character {
 //		
 //		return hurt;
 //	}
-	
-	public Script getTraits() {
-		return traits;
-	}
-	public void setTraits(Script traits) {
-		this.traits = traits;
-	}
-	public HashMap<String, Script> getTags() {
-		return tags;
-	}
-	public void setTags(HashMap<String, Script> tags) {
-		this.tags = tags;
-	}
-	
-	public void act(String key) {
-		if(key != null) {
-			this.traits.event(key);
-		}
-	}
-	
-	public void addTag(Script tag, String key) {
-		this.tags.put(key, tag);
-	}
-	public void removeTag(String key) {
-		this.tags.remove(key);
-	}
-	public boolean hasTag(String key) {
-		return (this.tags.get(key) != null);
-	}
-	public Script getTag(String key) {
-		return this.tags.get(key);
-	}
-	public void tagEvent(String key, String event) {
-		if(this.hasTag(key))
-			this.getTag(key).event(event);
-	}
-	
-	public void runTagEvent(String event) {
-		for(String tag: this.tags.keySet()) {
-			tagEvent(tag, event);
-		}
-	}
-	
-}

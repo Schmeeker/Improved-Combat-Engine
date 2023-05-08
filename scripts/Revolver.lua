@@ -8,6 +8,6 @@ event attack()
 		UI:number('Ammo: %d', ammo)
 	else
 		UI:message('Clik!')
-		UI:speak(user, 'Huh? I\'m need more bullet')
+		UI:speak(user, 'Huh? It must be empty!')
 	end
 !Event

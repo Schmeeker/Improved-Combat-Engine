@@ -66,9 +66,12 @@ public class ScriptManager {
 	}
 	
 	public static LuaValue[] get(String name) {
-		return L.execute("return" + name);
+		return L.execute("return " + name);
 	}
 	
+}
+	
+	// UNUSED
 	//Stolen code here
 	// Not really sure if I want to keep it or whatever,.
 	
@@ -123,5 +126,3 @@ public class ScriptManager {
 //			return null;
 //			
 //	}
-
-}

@@ -164,4 +164,8 @@ public class Script {
 			this.vars.put(var, ScriptManager.executeRaw("return " + var)[0].toJavaObject());
 		}
 	}
+	public void action(String key) {
+		// TODO Auto-generated method stub
+		
+	}
 }

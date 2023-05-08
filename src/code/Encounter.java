@@ -1,6 +1,5 @@
 package code;
 
-import java.io.IOException;
 import java.util.Scanner;
 
 import party.iroiro.luajava.Lua;
@@ -64,6 +63,8 @@ public class Encounter {
 		player1.attack(player2, true);
 		player1.attack(player2, true);
 		player1.attack(player2, true);
+		
+		player1.getPrimary().event("attack");
 		
 		System.out.println();
 		
