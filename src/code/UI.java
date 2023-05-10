@@ -129,7 +129,7 @@ public class UI {
 	}
 	
 	public static void fileNotFound(String path) {
-		errorMessage(String.format("File: %s Does Not Exist! It Must Be Unique.%n", path));
+		errorMessage(String.format("File: %s Does Not Exist!%n", path));
 	}
 	
 	public static void errorMessage(String text) {

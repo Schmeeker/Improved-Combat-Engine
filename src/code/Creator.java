@@ -54,7 +54,7 @@ public class Creator {
 			loaded = build.fromJson(reader, Character.class);
 			reader.close();
 		} catch (IOException e) {
-			UI.fileNotFound(path);
+			UI.fileNotFound("characters\\" + path);
 			loaded = null;
 		}
 		return loaded;
@@ -63,9 +63,12 @@ public class Creator {
 	public static void save(Character character) {
 		FileWriter writer;
 		try {
-			writer = new FileWriter(character.getSourceFile());
-			build.toJson(character, writer);
-			writer.close();
+			if(character.getSourcePath() != null && character.getSourceFile().getName() != "null") {
+				writer = new FileWriter(character.getSourceFile());
+				build.toJson(character, writer);
+				writer.close();
+				UI.message("File characters\\" + character.getSourceFile() + " Saved!");
+			}
 		} catch (IOException e) {
 			UI.fileNotFound(character.getSourcePath());
 			try {
@@ -84,6 +87,7 @@ public class Creator {
 			writer = new FileWriter(new File("characters\\" + path));
 			build.toJson(character, writer);
 			writer.close();
+			UI.message("File characters\\" + path + " Saved!");
 		} catch (IOException e) {
 			UI.errorMessage("Unable to Save!");
 		}

@@ -204,7 +204,7 @@ public class Character {
 		Creator.save(this);
 	}
 	
-	public void saveAs(String path) throws IOException {
+	public void saveAs(String path) {
 		Creator.saveAs(this, path);
 	}
 	

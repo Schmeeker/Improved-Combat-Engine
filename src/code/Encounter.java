@@ -34,7 +34,10 @@ public class Encounter {
 		}
 		
 		Character player1 = new Character("player1.char");
-		Character player2 = new Character("player2.char");
+		Character player2 = new Character("player2.chr");
+		
+		UI.bio(player1);
+		UI.bio(player2);
 		
 		UI.brief(player1);
 		UI.brief(player2);
