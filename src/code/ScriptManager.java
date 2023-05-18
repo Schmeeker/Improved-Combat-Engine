@@ -21,13 +21,13 @@ public class ScriptManager {
 		if(!script.isValid() || script.getContents() == null)
 			return null;
 		
-		LuaError error = L.run(script.getContents());
+		LuaError error = L.run("do " + script.getContents() + " end");
 		System.out.println("Lua: " + error);
 		return error;
 	}
 	
 	public static LuaError runRaw(String code) {
-		LuaError error = L.run(code);
+		LuaError error = L.run("do " + code + " end");
 		System.out.println("Lua: " + error);
 		return error;
 	}
@@ -36,12 +36,12 @@ public class ScriptManager {
 		if(code == null)
 			return null;
 			
-		return L.execute(code);
+		return L.execute(" do " + code+ " end ");
 	}
 	
 	// Only really used for testing
 	public static LuaValue[] trigger(Script script, String event) {
-		String function = script.getEvents().get(event);
+		String function = script.getActions().get(event);
 		
 		if(function == null)
 			return null;

@@ -9,22 +9,11 @@
   "wit": 2,
   "luck": 0,
   "primary": {
-    "source": "testWeapon2.wepn",
-    "contents": null,
-    "valid": false,
-    "events": null,
-    "vars": null,
-    "actions": null
+    "source": "Revolver.lua"
   },
   "secondary": null,
   "armour": {
-    "source": null,
-    "contents": null,
-    "valid": false,
-    "events": null,
-    "vars": null,
-    "actions": null
+    "source": null
   },
-  "traits": null,
-  "tags": {}
+  "traits": null
 }

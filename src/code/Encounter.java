@@ -33,7 +33,7 @@ public class Encounter {
 			System.exit(-2);
 		}
 		
-		Character player1 = new Character("player1.char");
+		Character player1 = new Character("player1.chr");
 		Character player2 = new Character("player2.chr");
 		
 		UI.bio(player1);
@@ -51,23 +51,26 @@ public class Encounter {
 		Script otherMod = new Script("mod.lua");
 		Script poisionMod = new Script("poision.lua");
 		
-		Item revolver = new Item("Revolver.lua");
-
-		Item blood = new Item("The_Bloodbath.lua");
+		Item revolver = new Item("Bug_Zapper.lua");
 		
-		player1.equipPrimary(revolver);
+		Script trainee = new Script("Trainee.lua");
 		
-		UI.scriptInfo(player1.getPrimary());
+		trainee.rebuild();
 		
-		player1.attack(player2, true);
-		player1.attack(player2, true);
-		player1.attack(player2, true);
-		player1.attack(player2, true);
-		player1.attack(player2, true);
-		player1.attack(player2, true);
-		player1.attack(player2, true);
+//		player1.equipPrimary(revolver);
 		
-		player1.getPrimary().event("attack");
+		player1.setTraits(trainee);
+		
+		UI.scriptInfo(player1.getTraits());
+		
+		player1.action("study");
+		
+		player1.action("skilled_attack", player2);
+		
+		player1.action("skilled_attack", player2);
+		
+		player1.action("lucky_attack", player2);
+		
 		
 		System.out.println();
 		
@@ -82,7 +85,7 @@ public class Encounter {
 		player1.addTag(poisionMod, "poision");
 		
 		ScriptManager.push(player1, "main");
-		player1.runTagEvent("onStart");
+		player1.runTagActions("onStart");
 		
 		ScriptManager.close();
 	}

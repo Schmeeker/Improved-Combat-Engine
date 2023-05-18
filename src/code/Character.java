@@ -27,16 +27,13 @@ public class Character {
 	
 	private Script traits;
 	
-	private HashMap<String, Script> tags = new HashMap<String, Script>();
+	private transient HashMap<String, Script> tags = new HashMap<String, Script>();
 	
 	public int getHP() {
 		return HP;
 	}
 	public void setHP(int hP) {
 		HP = hP;
-	}
-	public void damage (int amount) {
-		this.HP -= amount;
 	}
 	public int getMaxHP() {
 		return maxHP;
@@ -181,17 +178,17 @@ public class Character {
 		this.luck = model.getLuck();
 		
 		
-		if(model.loadPrimary() != null) {
+		if(model.loadPrimary() != null && model.loadPrimary().parse()) {
 			this.primary = model.getPrimary();
 		} else
 			this.primary = model.loadPrimary();
 		
-		if(model.loadSecondary() != null) {
+		if(model.loadSecondary() != null && model.loadSecondary().parse()) {
 			this.secondary = model.getSecondary();
 		} else
 			this.secondary = model.loadSecondary();
 		
-		if(model.loadArmour() != null) {
+		if(model.loadArmour() != null && model.loadArmour().parse()) {
 			this.armour = model.getArmour();
 		} else
 			this.armour = model.loadArmour();
@@ -208,42 +205,18 @@ public class Character {
 		Creator.saveAs(this, path);
 	}
 	
-	public Object attack(Character target, boolean primary) {
-		Item used = (primary) ? this.primary : this.secondary;
-		
-		if(!used.hasEvent("attack")) {
-			UI.message(String.format("%s is not a weapon?", used.getName()));
-			return null;
-		}
-		
-		ScriptManager.push(this, "user");
-		ScriptManager.push(target, "target");
-		return used.event("attack", this, target);
+	public void damage(int amount, String source) {
+		this.HP -= amount;
+		UI.damage(this, amount, source);
 	}
 	
-	public Object defend(Character attacker, Item used) {
-		
-		if(!used.hasEvent("defend")) {
-			UI.message(String.format("%s cannot defend?", used.getName()));
-			return null;
-		}
-		
-		ScriptManager.push(this, "user");
-//		ScriptManager.push(attacker, "attacker");
-		return used.event("defend", this, attacker);
+	public void sourcelessDamage(int amount) {
+		this.HP -= amount;
 	}
 	
-	public Object traitEvent(String key) {
-		
-		if(!traits.hasEvent(key)) {
-//			UI.message(String.format("%s cannot %s!", this.name, key));
-			return null;
-		}
-		
-		ScriptManager.push(this, "user");
-		return traits.eventObj(key);
+	public void heal(int amount) {
+		this.HP -= amount;
 	}
-	
 	
 	public Script getTraits() {
 		return traits;
@@ -251,19 +224,44 @@ public class Character {
 	public void setTraits(Script traits) {
 		this.traits = traits;
 	}
+	
+	public Object getVar(String key) {
+		return this.traits.getVar(key);
+	}
+	
+	public boolean hasAction(String key) {
+		return (this.traits.hasAction(key));
+	}
+	
+	public Object action(String key, Character target) {
+		if(!traits.hasAction(key)) {
+			UI.message(String.format("%s cannot %s!", this.name, key));
+			return null;
+		}
+		
+		return traits.action(key, this, target);
+	}
+	
+	public Object action(String key) {
+		if(!traits.hasAction(key)) {
+			UI.message(String.format("%s cannot %s!", this.name, key));
+			return null;
+		}
+		
+		return traits.action(key, this, null);
+	}
+	
+	public Object itemAction(String key, Character target, boolean primary) {
+		Item used = (primary) ? this.primary : this.secondary;
+		return used.action(key, this, target);
+	}
+	
 	public HashMap<String, Script> getTags() {
 		return tags;
 	}
 	public void setTags(HashMap<String, Script> tags) {
 		this.tags = tags;
 	}
-	
-	public void act(String key) {
-		if(key != null) {
-			this.traits.action(key);
-		}
-	}
-	
 	public void addTag(Script tag, String key) {
 		this.tags.put(key, tag);
 	}
@@ -276,14 +274,14 @@ public class Character {
 	public Script getTag(String key) {
 		return this.tags.get(key);
 	}
-	public void tagEvent(String key, String event) {
+	public void tagAction(String key, String event) {
 		if(this.hasTag(key))
-			this.getTag(key).event(event);
+			this.getTag(key).action(event, this, this);
 	}
 	
-	public void runTagEvent(String event) {
+	public void runTagActions(String key) {
 		for(String tag: this.tags.keySet()) {
-			tagEvent(tag, event);
+			tagAction(tag, key);
 		}
 	}
 	

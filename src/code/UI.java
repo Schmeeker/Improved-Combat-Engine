@@ -47,6 +47,15 @@ public class UI {
 		message(new String(user.getName() + " Took " + amount + " Damage!"));
 	}
 	
+	public static void heal(Character target, int amount, String damageSource) {
+		if(damageSource != null)
+			message(new String(target.getName() + " Was Healed " + amount + " Damage From " + damageSource + "!"));
+	}
+	
+	public static void sourcelessHealing(Character user, int amount) {
+		message(new String(user.getName() + " Was Healed " + amount + " Damage!"));
+	}
+	
 	public static void lucky(Character user) {
 		message(String.format("%s Is Lucky!", user.getName()));
 	}
@@ -71,7 +80,7 @@ public class UI {
 	}
 	
 	public static void me(Character spotlight, String text) {
-		message(String.format("%s is %s!", spotlight.getName(), text));
+		message(String.format("*%s %s!", spotlight.getName(), text));
 	}
 	
 	public static void speak(Character speaker, String words) {
@@ -99,22 +108,29 @@ public class UI {
 			result += String.format("\t%s: %s%n", var, spotlight.getVar(var));
 		}
 		
-		result += "Events(" + spotlight.getEvents().keySet().size() + "):\n";
-		for(String event: spotlight.getEvents().keySet()) {
-			result += String.format("\t%s: %.30s%n", event, spotlight.getEvents().get(event));
+		result += "Events(" + spotlight.numEvents() + "):\n";
+		for(String action: spotlight.getActions().keySet()) {
+			if(action.startsWith("*"))
+				result += String.format("\t%s: %.30s%n", action, spotlight.getActions().get(action));
+		}
+		
+		result += "Actions(" + spotlight.numActions() + "):\n";
+		for(String action: spotlight.getActions().keySet()) {
+			if(!action.startsWith("*"))
+				result += String.format("\t%s: %.30s%n", action, spotlight.getActions().get(action));
 		}
 		
 		System.out.println(result);
 	}
 	
 	public static void brief(Character spotlight) {
-		String result = ">\n";
+		String result = ">INFO:\t" + spotlight.getSourcePath() + "\n";
 		
 		result += String.format("Name: %s%n", spotlight.getName());
 		
 		result += String.format("HP: %d/%d%n", spotlight.getHP(), spotlight.getMaxHP());
 		
-		if(spotlight.getPrimary() != null)
+		if(spotlight.loadPrimary() != null)
 			result += String.format("Primary: %s%n", spotlight.getPrimary().getName());
 		else
 			result += String.format("Primary: %s%n", "Nothing");
