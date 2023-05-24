@@ -1,0 +1,19 @@
+{
+  "source": "Jerome.chr",
+  "name": "Jerome",
+  "HP": 50,
+  "maxHP": 50,
+  "strength": 1,
+  "agility": 1,
+  "fortitude": 4,
+  "wit": 3,
+  "luck": 1,
+  "primary": {
+    "source": "Dummy_Shield.wpn"
+  },
+  "secondary": null,
+  "armour": {
+    "source": "Old_Hoodie.arm"
+  },
+  "traits": "Magic_Dummy.lua"
+}

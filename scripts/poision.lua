@@ -1,4 +1,4 @@
-event onStart()
-	main:damage(2)
-	UI:damage(main, 2, 'Poison')
+event beginTurn()
+	target:damage(2, 'poison')
+	inflictor:damage(-2, 'leech')
 !Event

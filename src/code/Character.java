@@ -14,6 +14,8 @@ public class Character {
 	private int HP;
 	private int maxHP;
 	
+	private transient boolean act;
+	
 	private int strength;
 	private int agility;
 	private int fortitude;
@@ -27,7 +29,7 @@ public class Character {
 	
 	private Script traits;
 	
-	private transient HashMap<String, Script> tags = new HashMap<String, Script>();
+	private transient HashMap<String, Tag> tags = new HashMap<String, Tag>();
 	
 	public int getHP() {
 		return HP;
@@ -47,6 +49,12 @@ public class Character {
 	public void healMaxHP(int maxHP) {
 		this.maxHP = maxHP;
 		this.HP = maxHP;
+	}
+	public boolean canAct() {
+		return act;
+	}
+	public void cantAct() {
+		this.act = false;
 	}
 	public int getStrength() {
 		return strength;
@@ -256,14 +264,14 @@ public class Character {
 		return used.action(key, this, target);
 	}
 	
-	public HashMap<String, Script> getTags() {
+	public HashMap<String, Tag> getTags() {
 		return tags;
 	}
-	public void setTags(HashMap<String, Script> tags) {
+	public void setTags(HashMap<String, Tag> tags) {
 		this.tags = tags;
 	}
-	public void addTag(Script tag, String key) {
-		this.tags.put(key, tag);
+	public void addTag(String source, Character inflictor) {
+		this.tags.put(source.substring(0, source.indexOf(".lua")), new Tag(source, inflictor));
 	}
 	public void removeTag(String key) {
 		this.tags.remove(key);
@@ -271,7 +279,7 @@ public class Character {
 	public boolean hasTag(String key) {
 		return (this.tags.get(key) != null);
 	}
-	public Script getTag(String key) {
+	public Tag getTag(String key) {
 		return this.tags.get(key);
 	}
 	public void tagAction(String key, String event) {
@@ -283,6 +291,17 @@ public class Character {
 		for(String tag: this.tags.keySet()) {
 			tagAction(tag, key);
 		}
+	}
+	
+	public boolean beginTurn() {
+		this.act = true;
+		
+		this.traits.action("*beginTurn", this, null);
+		
+		this.runTagActions("*beginTurn");
+		
+		return this.act;
+		
 	}
 	
 }

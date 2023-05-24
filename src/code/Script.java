@@ -16,7 +16,7 @@ public class Script {
 	
 	protected transient boolean valid;
 	
-	private transient HashMap<String, String> actions;
+	protected transient HashMap<String, String> actions;
 	private transient HashMap<String, Object> vars;
 	
 	public Script(String source) {
@@ -120,7 +120,15 @@ public class Script {
 				int start = nameEnd + 2;
 				end  = this.getContents().indexOf(endword, start);
 				String subContents = this.getContents().substring(start, end).stripIndent();
-				String subName = "*" + this.getContents().substring(nameStart, nameEnd);
+				String subName = this.getContents().substring(nameStart, nameEnd);
+				
+				if(		subName.equals("attack") ||
+						subName.equals("defend") ||
+						subName.equals("beginTurn")	)
+				{
+					subName = "*" + subName;
+				}
+				
 				this.actions.put(subName, subContents);
 				
 			}

@@ -81,11 +81,12 @@ public class Encounter {
 		
 		ScriptManager.trigger(thornsMod, "hello");
 		
-		player1.addTag(otherMod, "other");
-		player1.addTag(poisionMod, "poision");
+		player1.addTag("poision.lua", player2);
+		
+		UI.scriptInfo((Script) player1.getTag("poision"));
 		
 		ScriptManager.push(player1, "main");
-		player1.runTagActions("onStart");
+		player1.beginTurn();
 		
 		ScriptManager.close();
 	}
