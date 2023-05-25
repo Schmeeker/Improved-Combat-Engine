@@ -162,6 +162,8 @@ public class Character {
 			this.fortitude = 0;
 			this.wit = 0;
 			this.luck = 0;
+			
+			this.traits = null;
 		}
 		
 	}
@@ -201,6 +203,11 @@ public class Character {
 		} else
 			this.armour = model.loadArmour();
 		
+		if(model.loadTraits() != null && model.loadTraits().parse()) {
+			this.traits = model.getTraits();
+		} else
+			this.traits = model.loadTraits();
+		
 		return true;
 		
 	}
@@ -220,13 +227,27 @@ public class Character {
 	
 	public void sourcelessDamage(int amount) {
 		this.HP -= amount;
+		UI.sourcelessDamage(this, amount);
 	}
 	
-	public void heal(int amount) {
-		this.HP -= amount;
+	public void heal(int amount, String source) {
+		this.HP += amount;
+		UI.heal(this, amount, source);
+	}
+	
+	public void sourcelessHealing(int amount) {
+		this.HP += amount;
+		UI.sourcelessHealing(this, amount);
 	}
 	
 	public Script getTraits() {
+		if(this.traits != null)
+			return this.traits;
+		else {
+			return new Script(null);
+		}
+	}
+	public Script loadTraits() {
 		return traits;
 	}
 	public void setTraits(Script traits) {

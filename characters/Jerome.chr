@@ -15,5 +15,7 @@
   "armour": {
     "source": "Old_Hoodie.arm"
   },
-  "traits": "Magic_Dummy.lua"
+  "traits": {
+    "source": "Magic_Dummy.lua"
+  }
 }

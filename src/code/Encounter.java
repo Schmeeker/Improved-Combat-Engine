@@ -34,7 +34,7 @@ public class Encounter {
 		}
 		
 		Character player1 = new Character("player1.chr");
-		Character player2 = new Character("player2.chr");
+		Character player2 = new Character("Jerome.chr");
 		
 		UI.bio(player1);
 		UI.bio(player2);
@@ -48,8 +48,6 @@ public class Encounter {
 		// Scripting
 		
 		Script thornsMod = new Script("thorns.lua");
-		Script otherMod = new Script("mod.lua");
-		Script poisionMod = new Script("poision.lua");
 		
 		Item revolver = new Item("Bug_Zapper.lua");
 		
@@ -76,17 +74,27 @@ public class Encounter {
 		
 		UI.brief(player2);
 		
-		UI.breakln2();
-		UI.breakln2();
-		
-		ScriptManager.trigger(thornsMod, "hello");
-		
 		player1.addTag("poision.lua", player2);
 		
 		UI.scriptInfo((Script) player1.getTag("poision"));
 		
 		ScriptManager.push(player1, "main");
 		player1.beginTurn();
+		
+		UI.scriptInfo(player2.getTraits());
+		
+		player2.action("geyser", player1);
+		player2.action("geyser", player1);
+		player2.action("lightning", player1);
+		player2.action("geyser", player1);
+		player2.action("leech_seed", player1);
+		player2.action("fireball", player1);
+		player2.action("repair", null);
+		player2.beginTurn();
+		player2.beginTurn();
+		player2.beginTurn();
+		player2.action("lightning", player1);
+		player2.action("fireball", player1);
 		
 		ScriptManager.close();
 	}

@@ -9,7 +9,7 @@
   "wit": 2,
   "luck": 0,
   "primary": {
-    "source": "Revolver.lua"
+    "source": "Bug_Zapper.lua"
   },
   "secondary": null,
   "armour": {
