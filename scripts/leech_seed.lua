@@ -2,6 +2,7 @@ var timer = 4;
 
 event beginTurn()
 	
+	--[[ Random chance to BONUS RESIST --]]
 	if Util:random(1,10) + target:getFortitude() >= 10 then
 		timer = timer - 1
 	end
