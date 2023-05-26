@@ -15,13 +15,17 @@ public class Tag extends Script{
 		return inflictor;
 	}
 	
-	public LuaValue[] action(String key, Character user, Character target) {
+	public String getName() {
+		return UI.pretty(this.getSource().substring(0, getSource().indexOf(".")));
+	}
+	
+	public LuaValue[] action(String key, Character afflicted, Character inflictor) {
 		if(this.hasAction(key)) {
 			String function = this.actions.get(key);
 			this.pushVars();
-			ScriptManager.push(user, "user");
-			ScriptManager.push("target", target);
+			ScriptManager.push(afflicted, "afflicted");
 			ScriptManager.push("inflictor", this.inflictor);
+			ScriptManager.push("target", afflicted);
 			
 			LuaValue[] value = ScriptManager.executeRaw(function);
 			this.update();

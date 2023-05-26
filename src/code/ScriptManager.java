@@ -36,7 +36,7 @@ public class ScriptManager {
 		if(code == null)
 			return null;
 			
-		return L.execute(" do " + code+ " end ");
+		return L.execute(" do " + code + " end ");
 	}
 	
 	// Only really used for testing

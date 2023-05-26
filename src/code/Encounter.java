@@ -74,10 +74,6 @@ public class Encounter {
 		
 		UI.brief(player2);
 		
-		player1.addTag("poision.lua", player2);
-		
-		UI.scriptInfo((Script) player1.getTag("poision"));
-		
 		ScriptManager.push(player1, "main");
 		player1.beginTurn();
 		
@@ -95,6 +91,22 @@ public class Encounter {
 		player2.beginTurn();
 		player2.action("lightning", player1);
 		player2.action("fireball", player1);
+		player2.action("repair", null);
+		player2.beginTurn();
+		player2.beginTurn();
+		player2.action("leech_seed", player1);
+		
+		player1.beginTurn();
+		player1.beginTurn();
+		player1.beginTurn();
+		player1.beginTurn();
+		player1.beginTurn();
+		player1.beginTurn();
+		
+		player2.action("mega_drain", player1);
+
+		
+		UI.brief(player1);
 		
 		ScriptManager.close();
 	}

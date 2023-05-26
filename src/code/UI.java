@@ -39,21 +39,35 @@ public class UI {
 	}
 	
 	public static void damage(Character target, int amount, String damageSource) {
-		if(damageSource != null)
-			message(new String(target.getName() + " Took " + amount + " Damage From " + damageSource + "!"));
+		if(damageSource != null) {
+			if(amount > 0)
+				message(new String(target.getName() + " Took " + amount + " Damage From " + pretty(damageSource) + "!"));
+			else
+				message(new String(target.getName() + " Wasn't Damaged By " + pretty(damageSource) + "!"));
+		}
 	}
 	
 	public static void sourcelessDamage(Character user, int amount) {
-		message(new String(user.getName() + " Took " + amount + " Damage!"));
+		if(amount > 0)
+			message(new String(user.getName() + " Took " + amount + " Damage!"));
+		else
+			message(new String(user.getName() + " Wasn't Damaged!"));
 	}
 	
 	public static void heal(Character target, int amount, String damageSource) {
-		if(damageSource != null)
-			message(new String(target.getName() + " Was Healed " + amount + " Damage From " + damageSource + "!"));
+		if(damageSource != null) {
+			if(amount > 0)
+				message(new String(target.getName() + " Was Healed " + amount + " Damage From " + pretty(damageSource) + "!"));
+			else
+				message(new String(target.getName() + " Wasn't Healed By " + pretty(damageSource) + "!"));
+		}
 	}
 	
 	public static void sourcelessHealing(Character user, int amount) {
-		message(new String(user.getName() + " Was Healed " + amount + " Damage!"));
+		if(amount > 0)
+			message(new String(user.getName() + " Was Healed " + amount + " Damage!"));
+		else
+			message(new String(user.getName() + " Wasn't Healed!"));
 	}
 	
 	public static void lucky(Character user) {
@@ -117,7 +131,7 @@ public class UI {
 		result += "Actions(" + spotlight.numActions() + "):\n";
 		for(String action: spotlight.getActions().keySet()) {
 			if(!action.startsWith("*"))
-				result += String.format("\t%s: %.30s%n", action, spotlight.getActions().get(action));
+				result += String.format("\t%s: %.30s%n", pretty(action), spotlight.getActions().get(action));
 		}
 		
 		System.out.println(result);
@@ -151,6 +165,10 @@ public class UI {
 	public static void errorMessage(String text) {
 		breakln2();
 		endMessage(String.format("ERROR: %s%n", text));
+	}
+	
+	public static String pretty(String text) {
+		return text.replace('_', ' ');
 	}
 	
 }

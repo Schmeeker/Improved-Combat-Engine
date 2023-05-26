@@ -14,6 +14,8 @@ public class Character {
 	private int HP;
 	private int maxHP;
 	
+	private transient double limit;
+	
 	private transient boolean act;
 	
 	private int strength;
@@ -292,10 +294,13 @@ public class Character {
 		this.tags = tags;
 	}
 	public void addTag(String source, Character inflictor) {
-		this.tags.put(source.substring(0, source.indexOf(".lua")), new Tag(source, inflictor));
+		this.tags.put(UI.pretty(source.substring(0, source.indexOf(".lua"))), new Tag(source, inflictor));
 	}
 	public void removeTag(String key) {
 		this.tags.remove(key);
+	}
+	public void removeTag(Tag tag) {
+		this.tags.remove(tag.getName());
 	}
 	public boolean hasTag(String key) {
 		return (this.tags.get(key) != null);
